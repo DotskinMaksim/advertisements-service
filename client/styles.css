@@ -1,25 +1,53 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-}
+ body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Обеспечивает, что body занимает всю высоту экрана */
+        }
 
-#ads-container {
-    margin-bottom: 20px;
-}
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            bottom: 0;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+        }
 
-#ad-item {
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 10px;
-}
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
 
-form {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-}
+        h4 {
+            color: #555;
+            margin-bottom: 15px;
+        }
 
-input, textarea, button {
-    margin-bottom: 10px;
-    padding: 8px;
-}
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: scale(1.05); /* Увеличение карточки при наведении */
+        }
+
+        .card-title a {
+            text-decoration: none; /* Убирает подчеркивание с заголовка */
+            color: #007bff;
+        }
+
+        .card-title a:hover {
+            text-decoration: underline; /* Подчеркивание при наведении */
+        }
+
+        .btn {
+            margin-top: 20px;
+        }

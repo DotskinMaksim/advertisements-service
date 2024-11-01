@@ -9,26 +9,37 @@ class AdController {
     }
 
     // Получение списка объявлений с параметрами сортировки
-    public function getAds($page = 1, $limit = 10, $sort = 'created_at', $order = 'DESC') {
-        $offset = ($page - 1) * $limit;
+   public function getAds($page = 1, $limit = 10, $sort = 'created_at', $order = 'DESC') {
+    $offset = ($page - 1) * $limit;
 
-        // Валидация параметров сортировки
-        if (!in_array($sort, ['price', 'created_at'])) {
-            $sort = 'created_at'; // По умолчанию
-        }
-        if (!in_array($order, ['ASC', 'DESC'])) {
-            $order = 'DESC'; // По умолчанию
-        }
-
-        $sql = "SELECT title, main_image, price, created_at FROM ads ORDER BY $sort $order LIMIT :offset, :limit";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-        $stmt->execute();
-
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return json_encode($result);
+    // Валидация параметров сортировки
+    if (!in_array($sort, ['price', 'created_at'])) {
+        $sort = 'created_at'; // По умолчанию
     }
+    if (!in_array($order, ['ASC', 'DESC'])) {
+        $order = 'DESC'; // По умолчанию
+    }
+
+    // Получаем общее количество объявлений
+    $totalSql = "SELECT COUNT(*) FROM ads";
+    $totalStmt = $this->pdo->prepare($totalSql);
+    $totalStmt->execute();
+    $totalAds = $totalStmt->fetchColumn();
+
+    // Получаем объявления
+    $sql = "SELECT id, title, main_image FROM ads ORDER BY $sort $order LIMIT :offset, :limit";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+    $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return json_encode([
+        'ads' => $result,
+        'total' => (int)$totalAds
+    ]);
+}
 
     public function getAdsByUser($userId) {
         $sql = "SELECT title, main_image, price, created_at  FROM ads WHERE user_id = :user_id";
@@ -39,16 +50,22 @@ class AdController {
         return json_encode($result);
     }
 
-    public function getAd($id, $fields = []) {
-        $fields = implode(', ', array_map('trim', $fields));
+   public function getAd($id) {
+    $sql = "SELECT title, price, main_image, description, additional_images FROM ads WHERE id = :id";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute(['id' => $id]);
 
-        $sql = "SELECT title, price, main_image, created_at " . (!empty($fields) ? ", $fields" : "") . " FROM ads WHERE id = :id";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['id' => $id]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($result) {
+        // Декодируем дополнительные изображения из JSON
+        $result['additional_images'] = json_decode($result['additional_images'], true);
         return json_encode($result);
+    } else {
+        http_response_code(404);
+        return json_encode(['message' => 'Ad not found']);
     }
+}
 
     public function createAd($data) {
         // Валидация данных
