@@ -3,6 +3,10 @@ require_once '../config/config.php';
 require_once 'controllers/AdController.php';
 require_once 'controllers/UserController.php';
 
+header("Access-Control-Allow-Origin: *"); // Разрешить запросы с любых источников
+header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS"); // Разрешенные методы
+header("Access-Control-Allow-Headers: Content-Type"); // Разрешенные заголовки
+
 global $pdo;
 
 header("Content-Type: application/json");
