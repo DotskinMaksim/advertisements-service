@@ -47,26 +47,36 @@ const app = Vue.createApp({
     },
     methods: {
         async fetchAds() {
-            const response = await fetch(`http://localhost:8000/api/ads?page=${this.currentPage}&limit=${this.adsPerPage}`);
-            const data = await response.json();
-            this.ads = data.ads; // Предполагается, что API возвращает массив объектов ads
-            this.totalAds = data.total; // Предполагается, что API возвращает общее количество объявлений
-            this.totalPages = Math.ceil(this.totalAds / this.adsPerPage); // Вычисляем общее количество страниц
+            try {
+                // Запрашиваем объявления на основе текущей страницы и лимита
+                const response = await fetch(`http://localhost:8000/api/ads?page=${this.currentPage}&limit=${this.adsPerPage}`);
+                const data = await response.json();
+
+                // Предполагаем, что API возвращает объект с массивом ads и общим числом total
+                this.ads = data.ads || [];
+                this.totalAds = data.total || 0;
+
+                // Рассчитываем общее количество страниц
+                this.totalPages = Math.ceil(this.totalAds / this.adsPerPage);
+            } catch (error) {
+                console.error("Ошибка при загрузке объявлений:", error);
+            }
         },
         previousPage() {
             if (this.currentPage > 1) {
                 this.currentPage--;
-                this.fetchAds();
+                this.fetchAds(); // Обновляем объявления для предыдущей страницы
             }
         },
         nextPage() {
             if (this.currentPage < this.totalPages) {
                 this.currentPage++;
-                this.fetchAds();
+                this.fetchAds(); // Обновляем объявления для следующей страницы
             }
         }
     },
     async created() {
+        // Загружаем объявления для первой страницы при инициализации
         await this.fetchAds();
     }
 }).mount('#app');

@@ -30,10 +30,11 @@ switch ($request[0]) {
                     echo $adController->getAd($request[1]);
                 }
                 else {
-                    // Получение списка объявлений с параметрами сортировки
                     $sort = isset($_GET['sort']) ? $_GET['sort'] : 'created_at';
                     $order = isset($_GET['order']) ? $_GET['order'] : 'DESC';
-                    echo $adController->getAds(1, 10, $sort, $order); // Пагинация: 1 страница, 10 объявлений
+                    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                    $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+                    echo $adController->getAds($page, $limit, $sort, $order);
                 }
                 break;
             case 'POST':

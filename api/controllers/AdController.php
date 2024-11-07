@@ -12,25 +12,23 @@ class AdController {
    public function getAds($page = 1, $limit = 10, $sort = 'created_at', $order = 'DESC') {
     $offset = ($page - 1) * $limit;
 
-    // Валидация параметров сортировки
+    // Проверка и настройка сортировки
     if (!in_array($sort, ['price', 'created_at'])) {
-        $sort = 'created_at'; // По умолчанию
+        $sort = 'created_at';
     }
     if (!in_array($order, ['ASC', 'DESC'])) {
-        $order = 'DESC'; // По умолчанию
+        $order = 'DESC';
     }
 
-    // Получаем общее количество объявлений
+    // Подсчет общего количества объявлений
     $totalSql = "SELECT COUNT(*) FROM ads";
     $totalStmt = $this->pdo->prepare($totalSql);
     $totalStmt->execute();
     $totalAds = $totalStmt->fetchColumn();
 
-    // Получаем объявления
-    $sql = "SELECT id, title, main_image FROM ads ORDER BY $sort $order LIMIT :offset, :limit";
+    // Получаем список объявлений
+    $sql = "SELECT id, title, main_image FROM ads ORDER BY $sort $order LIMIT $offset, $limit";
     $stmt = $this->pdo->prepare($sql);
-    $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-    $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
     $stmt->execute();
 
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -40,6 +38,7 @@ class AdController {
         'total' => (int)$totalAds
     ]);
 }
+
 
     public function getAdsByUser($userId) {
         $sql = "SELECT title, main_image, price, created_at  FROM ads WHERE user_id = :user_id";
