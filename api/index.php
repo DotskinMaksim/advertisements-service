@@ -3,10 +3,15 @@ require_once '../config/config.php';
 require_once 'controllers/AdController.php';
 require_once 'controllers/UserController.php';
 
-header("Access-Control-Allow-Origin: *"); // Разрешить запросы с любых источников
-header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS"); // Разрешенные методы
-header("Access-Control-Allow-Headers: Content-Type"); // Разрешенные заголовки
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS"); // Добавьте OPTIONS в список разрешённых методов
+header("Access-Control-Allow-Headers: Content-Type");
 
+// Если метод запроса OPTIONS, возвращаем успешный ответ
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 global $pdo;
 
 header("Content-Type: application/json");
@@ -44,23 +49,40 @@ switch ($request[0]) {
                 break;
 
             case 'DELETE':
-                if (isset($request[1])) {
-                    // Удаление объявления по ID
-                    echo $adController->deleteAd($request[1]);
-                } else {
-                    http_response_code(400);
-                    echo json_encode(['message' => 'Ad ID is required']);
-                }
-                break;
+            if (isset($request[1])) {
+                // Удаление объявления
+                echo $adController->deleteAd($request[1]);
+            } else {
+                http_response_code(400);
+                echo json_encode(['message' => 'Ad ID is required']);
+            }
+            break;
 
-            default:
-                http_response_code(405);
-                echo json_encode(['message' => 'Method not allowed']);
-                break;
+        default:
+            http_response_code(405);
+            echo json_encode(['message' => 'Method not allowed']);
+            break;
 
         }
         break;
-
+    case 'register':
+        if ($method === 'POST') {
+            $inputData = json_decode(file_get_contents('php://input'), true);
+            echo $userController->registerUser($inputData);
+        } else {
+            http_response_code(405);
+            echo json_encode(['message' => 'Method not allowed']);
+        }
+        break;
+    case 'login':
+        if ($method === 'POST') {
+            $inputData = json_decode(file_get_contents('php://input'), true);
+            echo $userController->loginUser($inputData);
+        } else {
+            http_response_code(405);
+            echo json_encode(['message' => 'Method not allowed']);
+        }
+        break;
     case 'users':
         switch ($method) {
             case 'GET':
@@ -97,22 +119,23 @@ switch ($request[0]) {
         break;
 
     case 'user-ads':
-        switch ($method) {
-            case 'GET':
-                if (isset($request[1])) {
-                    // Получение всех объявлений определенного пользователя
-                    echo $adController->getAdsByUser($request[1]);
-                } else {
-                    http_response_code(400);
-                    echo json_encode(['message' => 'User ID is required']);
-                }
-                break;
-            default:
-                http_response_code(405);
-                echo json_encode(['message' => 'Method not allowed']);
-                break;
-        }
-        break;
+    switch ($method) {
+        case 'GET':
+            if (isset($request[1])) {
+                // Fetch user-specific ads based on the user ID passed
+                echo $adController->getAdsByUser($request[1]);
+            } else {
+                http_response_code(400);
+                echo json_encode(['message' => 'User ID is required']);
+            }
+            break;
+
+        default:
+            http_response_code(405);
+            echo json_encode(['message' => 'Method not allowed']);
+            break;
+    }
+    break;
 
     default:
         http_response_code(404);

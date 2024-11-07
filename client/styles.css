@@ -1,53 +1,94 @@
- body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            text-align: center;
-            padding: 20px;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh; /* Обеспечивает, что body занимает всю высоту экрана */
-        }
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    text-align: center;
+    padding: 20px;
+    padding-top: 70px; /* Отступ под меню */
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Обеспечивает, что body занимает всю высоту экрана */
+}
+ nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Делаем меню поверх других элементов */
+}
+.navbar {
+    background-color: #f8f9fa;
+    padding: 10px 0;
+}
 
-        footer {
-            text-align: center;
-            padding: 20px 0;
-            bottom: 0;
-            width: 100%;
-            background-color: #fff;
-            box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
-        }
+.navbar-nav .nav-link {
+    font-size: 1.1rem;
+    padding: 8px 15px;
+}
 
-        h2 {
-            color: #333;
-            margin-bottom: 20px;
-        }
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
 
-        h4 {
-            color: #555;
-            margin-bottom: 15px;
-        }
+h4 {
+    color: #555;
+    margin-bottom: 15px;
+}
 
-        .card {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-        }
+.card {
+    padding: 15px;  /* Добавляет внутренние отступы для карточки */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    margin: 10px 0;  /* Отступы сверху и снизу */
+}
 
-        .card:hover {
-            transform: scale(1.05); /* Увеличение карточки при наведении */
-        }
+.card:hover {
+    transform: scale(1.05); /* Увеличение карточки при наведении */
+}
 
-        .card-title a {
-            text-decoration: none; /* Убирает подчеркивание с заголовка */
-            color: #007bff;
-        }
+.card-title a {
+    text-decoration: none; /* Убирает подчеркивание с заголовка */
+    color: #007bff;
+}
+.card-body {
+    padding: 15px;
+}
 
-        .card-title a:hover {
-            text-decoration: underline; /* Подчеркивание при наведении */
-        }
+.card-title a:hover {
+    text-decoration: underline; /* Подчеркивание при наведении */
+}
+.card-img-top {
+    width: 100%;
+    height: 400px; /* Задаем фиксированную высоту для изображения */
+    object-fit: cover; /* Изображение будет обрезано и заполнит область, сохраняя пропорции */
+}
+.row {
+    margin-left: -10px;  /* Убираем отрицательные отступы, если они есть */
+    margin-right: -10px; /* Убираем отрицательные отступы, если они есть */
+}
 
-        .btn {
-            margin-top: 20px;
-        }
+.col-md-6 {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.btn {
+    margin-top: 20px;
+}
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+font-family: Arial, sans-serif;
+}
+
+.container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
