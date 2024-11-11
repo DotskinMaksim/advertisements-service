@@ -8,11 +8,9 @@ class AdController {
         $this->pdo = $pdo;
     }
 
-    // Получение списка объявлений с параметрами сортировки
  public function getAds($page = 1, $limit = 10, $sort = 'created_at', $order = 'DESC') {
     $offset = ($page - 1) * $limit;
 
-    // Проверка и настройка сортировки
     if ($sort == 'price') {
         $sort = 'price';
     } elseif ($sort == 'created_at') {
@@ -20,40 +18,35 @@ class AdController {
     } elseif ($sort == 'title') {
         $sort = 'title';
     } else {
-        $sort = 'created_at'; // По умолчанию сортировка по дате
+        $sort = 'created_at';
     }
 
-    // Проверка на порядок сортировки
     if (!in_array($order, ['ASC', 'DESC'])) {
         $order = 'DESC';
     }
 
-    // Подсчет общего количества объявлений
     $totalSql = "SELECT COUNT(*) FROM ads";
     $totalStmt = $this->pdo->prepare($totalSql);
     $totalStmt->execute();
     $totalAds = $totalStmt->fetchColumn();
 
-    // Получаем список объявлений с учетом сортировки
     $sql = "SELECT id, title, main_image, price, created_at FROM ads ORDER BY $sort $order LIMIT $offset, $limit";
     $stmt = $this->pdo->prepare($sql);
     $stmt->execute();
 
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Формируем результат
     $ads = array_map(function($ad) {
-        // Преобразуем additional_images из строки в массив (если это строка JSON)
         $additionalImages = json_decode($ad['additional_images'], true);
         if ($additionalImages === null) {
-            $additionalImages = []; // Если вдруг было пусто или некорректно, задаем пустой массив
+            $additionalImages = [];
         }
 
         return [
             'id' => $ad['id'],
             'title' => $ad['title'],
             'main_image' => $ad['main_image'],
-            'price' => $ad['price'], // добавляем цену в ответ
+            'price' => $ad['price'],
             'additional_images' => $additionalImages
         ];
     }, $result);
@@ -81,10 +74,8 @@ class AdController {
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($result) {
-        // Преобразуем поле additional_images из строки JSON в массив URL
         $result['additional_images'] = json_decode($result['additional_images'], true);
 
-        // Если поле additional_images пустое или некорректное, устанавливаем пустой массив
         if ($result['additional_images'] === null) {
             $result['additional_images'] = [];
         }
@@ -96,8 +87,8 @@ class AdController {
     }
 }
 
+
     public function createAd($data) {
-    // Валидация данных
     if (empty($data['title']) || strlen($data['title']) > 200) {
         http_response_code(400);
         echo json_encode(['message' => 'Invalid title']);
@@ -119,7 +110,6 @@ class AdController {
         return;
     }
 
-    // Запись объявления в базу данных
     $sql = "INSERT INTO ads (title, description, price, main_image, additional_images, user_id) 
             VALUES (:title, :description, :price, :main_image, :additional_images, :user_id)";
 
@@ -137,7 +127,6 @@ class AdController {
 }
 
     public function deleteAd($adId) {
-    // Проверка существования объявления
     $sqlCheck = "SELECT * FROM ads WHERE id = :id";
     $stmtCheck = $this->pdo->prepare($sqlCheck);
     $stmtCheck->execute(['id' => $adId]);
@@ -147,7 +136,6 @@ class AdController {
         return json_encode(['message' => 'Ad not found']);
     }
 
-    // Удаление объявления
     $sql = "DELETE FROM ads WHERE id = :id";
     $stmt = $this->pdo->prepare($sql);
     $stmt->execute(['id' => $adId]);

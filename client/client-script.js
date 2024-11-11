@@ -7,3 +7,4 @@ function logOut() {
     window.location.href = '../';  
 
 }
+const apiHost = 'localhost:8000/api';

@@ -129,7 +129,7 @@ const app = Vue.createApp({
     methods: {
         async fetchAds() {
             try {
-                const response = await fetch(`http://localhost:8000/api/ads?page=${this.currentPage}&limit=${this.adsPerPage}&sort=${this.sort}&order=${this.order}`);
+                const response = await fetch(`http://${apiHost}/ads?page=${this.currentPage}&limit=${this.adsPerPage}&sort=${this.sort}&order=${this.order}`);
                 const data = await response.json();
 
                 this.ads = data.ads || [];
@@ -144,7 +144,7 @@ const app = Vue.createApp({
             if (userId) {
                 try {
                     
-                    const response = await fetch(`http://localhost:8000/api/user-ads/${userId}`);
+                    const response = await fetch(`http://${apiHost}/user-ads/${userId}`);
                     const data = await response.json();
                     this.userAds = data || [];  // Fill in the user ads
                 } catch (error) {
@@ -155,7 +155,7 @@ const app = Vue.createApp({
          async deleteAd(adId) {
             try {
               
-                const response = await fetch(`http://localhost:8000/api/ads/${adId}`, {
+                const response = await fetch(`http://${apiHost}/ads/${adId}`, {
                     method: 'DELETE'
                 });
                 const result = await response.json();

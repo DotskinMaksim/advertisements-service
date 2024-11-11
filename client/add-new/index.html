@@ -53,23 +53,21 @@
             <button type="button" class="btn btn-secondary" onclick="window.location.href='../';">Назад</button>
         </form>
     </div>
+<script src="../client-script.js"></script>
 
     <script>
-        // Функция для загрузки изображений на imgBB
         async function uploadToImgBB(file) {
-            const apiKey = '65f679a364e3f1c291622f908e5157c8';  // Замените на ваш API ключ
             const formData = new FormData();
-            formData.append('image', file);  // Добавляем изображение в форму
+            formData.append('image', file);
 
             try {
-                const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=65f679a364e3f1c291622f908e5157c8`, {
                     method: 'POST',
                     body: formData
                 });
 
                 const data = await response.json();
                 if (data.success) {
-                    // Получаем URL изображения
                     const imageUrl = data.data.url;
                     console.log('Изображение загружено:', imageUrl);
                     return imageUrl;
@@ -88,19 +86,16 @@
 
             const formData = new FormData(this);
 
-            // Получаем данные формы
             const title = document.getElementById('title').value;
             const description = document.getElementById('description').value;
             const price = document.getElementById('price').value;
 
-            // Получаем главное изображение и загружаем его на imgbb
             const mainImageFile = document.getElementById('main_image').files[0];
             let mainImageUrl = '';
             if (mainImageFile) {
                 mainImageUrl = await uploadToImgBB(mainImageFile);
             }
 
-            // Для дополнительных изображений (если есть)
             let additionalImagesUrls = [];
             const additionalImage1File = document.getElementById('additional_image_1').files[0];
             if (additionalImage1File) {
@@ -118,7 +113,6 @@
                 }
             }
 
-            // Собираем данные в объект
             const adData = {
                 title: title,
                 description: description,
@@ -129,17 +123,16 @@
             };
 
             try {
-                const response = await fetch('http://localhost:8000/api/ads', {
+                const response = await fetch(`http://${apiHost}/ads`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',  // Указываем, что данные в формате JSON
+                        'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(adData)  // Отправляем данные как JSON
+                    body: JSON.stringify(adData)
                 });
 
                 if (response.ok) {
                     alert('Объявление успешно добавлено!');
-                    // Перенаправляем пользователя на главную страницу
                     window.location.href = '../';
                 } else {
                     alert('Ошибка при добавлении объявления!');

@@ -1,6 +1,5 @@
 <?php
-
-require_once '/Users/maksimdockin/PhpstormProjects/AdsService/vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 use Firebase\JWT\JWT;
 class UserController {
     private $pdo;
@@ -9,7 +8,6 @@ class UserController {
         $this->pdo = $pdo;
     }
     public function registerUser($input) {
-    // Validate input
         if (empty($input['name']) || strlen($input['name']) > 100) {
             http_response_code(400);
             return json_encode(['message' => 'Invalid name']);
@@ -22,7 +20,6 @@ class UserController {
             http_response_code(400);
             return json_encode(['message' => 'Password is required']);
         }
-         // Check if the email or nickname is already taken
         $sqlCheckEmail = "SELECT id FROM users WHERE email = :email";
         $stmtCheckEmail = $this->pdo->prepare($sqlCheckEmail);
         $stmtCheckEmail->execute(['email' => $input['email']]);
@@ -39,7 +36,6 @@ class UserController {
             return json_encode(['message' => 'Nickname is already taken']);
         }
 
-        // Hash password
         $hashedPassword = password_hash($input['password'], PASSWORD_DEFAULT);
 
         $sql = "INSERT INTO users (name, email, password) VALUES (:name, :email, :password)";
@@ -52,28 +48,22 @@ class UserController {
 
         $userId = $this->pdo->lastInsertId();
 
-        // Генерация JWT токена (предполагаем, что у вас есть библиотека для генерации JWT)
         $token = $this->generateJWT($userId);
 
         return json_encode(['message' => 'User registered successfully', 'token' => $token, 'id' => $userId , 'userId' => $userId]);}
-    // В UserController.php
     public function loginUser($data) {
     $email = $data['email'];
     $password = $data['password'];
 
-    // Проверяем, существует ли пользователь с данным email
     $sql = "SELECT id, name, email, password FROM users WHERE email = :email";
     $stmt = $this->pdo->prepare($sql);
     $stmt->execute(['email' => $email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user) {
-        // Проверяем правильность пароля
         if (password_verify($password, $user['password'])) {
-            // Генерация JWT токена
             $jwt = $this->generateJWT($user['id']);
 
-            // Отправляем токен в ответе
             return json_encode(['token' => $jwt, 'userId' => $user['id']]);
         } else {
             http_response_code(401);
@@ -86,28 +76,26 @@ class UserController {
 }
    public function generateJWT($userId) {
     $issuedAt = time();
-    $expirationTime = $issuedAt + 3600;  // токен действителен 1 час
+    $expirationTime = $issuedAt + 3600;
     $payload = [
-        'iss' => 'your-issuer',  // кто создал JWT
-        'iat' => $issuedAt,      // время выпуска
-        'exp' => $expirationTime, // время истечения
-        'sub' => $userId,        // идентификатор пользователя
+        'iss' => 'your-issuer',
+        'iat' => $issuedAt,
+        'exp' => $expirationTime,
+        'sub' => $userId,
     ];
 
-    $secretKey = 'your-secret-key'; // ваш секретный ключ
+    $secretKey = 'your-secret-key';
 
-    // Теперь нужно передать три аргумента: payload, key и algo (если необходимо)
-    $jwt = JWT::encode($payload, $secretKey, 'HS256'); // 'HS256' - алгоритм по умолчанию
+    $jwt = JWT::encode($payload, $secretKey, 'HS256');
     return $jwt;
 }
 
     public function getUsers($sort = 'name', $order = 'ASC') {
-        // Валидация параметров сортировки
         if (!in_array($sort, ['name', 'email', 'created_at'])) {
-            $sort = 'name'; // По умолчанию
+            $sort = 'name';
         }
         if (!in_array($order, ['ASC', 'DESC'])) {
-            $order = 'ASC'; // По умолчанию
+            $order = 'ASC';
         }
 
         $sql = "SELECT id, name, email, created_at FROM users ORDER BY $sort $order";
@@ -118,7 +106,6 @@ class UserController {
         return json_encode($result);
     }
 
-    // Получение конкретного пользователя
     public function getUser($id) {
         $sql = "SELECT id, name, email, created_at FROM users WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
@@ -134,9 +121,7 @@ class UserController {
         }
     }
 
-    // Создание нового пользователя
     public function createUser($input) {
-        // Валидация данных
         if (empty($input['name']) || strlen($input['name']) > 100) {
             http_response_code(400);
             echo json_encode(['message' => 'Invalid name']);
@@ -153,7 +138,6 @@ class UserController {
             return;
         }
 
-        // Хэширование пароля
         $hashedPassword = password_hash($input['password'], PASSWORD_DEFAULT);
 
         $sql = "INSERT INTO users (name, email, password) VALUES (:name, :email, :password)";
@@ -167,7 +151,6 @@ class UserController {
         echo json_encode(['message' => 'User created successfully', 'id' => $this->pdo->lastInsertId()]);
     }
     public function deleteUser($userId) {
-    // Проверка существования пользователя
     $sqlCheck = "SELECT * FROM users WHERE id = :id";
     $stmtCheck = $this->pdo->prepare($sqlCheck);
     $stmtCheck->execute(['id' => $userId]);
@@ -177,7 +160,6 @@ class UserController {
         return json_encode(['message' => 'User not found']);
     }
 
-    // Удаление пользователя
     $sql = "DELETE FROM users WHERE id = :id";
     $stmt = $this->pdo->prepare($sql);
     $stmt->execute(['id' => $userId]);
