@@ -82,13 +82,11 @@
     <div class="ad-container">
         <h2>Подробности объявления</h2>
         <div v-if="ad">
-            <!-- Основное изображение -->
             <img :src="ad.main_image" class="img-fluid" alt="Main Ad Image">
 
             <h4>{{ ad.title }}</h4>
             <p>{{ ad.description }}</p>
 
-            <!-- Дополнительные изображения -->
             <div>
                 <h5>Дополнительные изображения:</h5>
                 <div v-for="(img, index) in ad.additional_images" :key="index">
@@ -98,7 +96,6 @@
         </div>
         <div v-else>Загрузка...</div>
 
-        <!-- Кнопка назад -->
         <a href="index.html" class="back-btn">Назад</a>
     </div>
 </div>
@@ -116,7 +113,7 @@ const app = Vue.createApp({
         const id = params.get('id');
         const response = await fetch(`http://localhost:8000/api/ads/${id}`);
         const data = await response.json();
-        this.ad = data; // Загружаем данные объявления
+        this.ad = data; 
     }
 }).mount('#app');
 </script>
