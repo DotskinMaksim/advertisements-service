@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Ноя 10 2024 г., 22:44
+-- Время создания: Ноя 14 2024 г., 16:22
 -- Версия сервера: 10.4.28-MariaDB
 -- Версия PHP: 8.2.4
 
@@ -78,12 +78,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `created_at`, `is_admin`) VALUES
-(1, 'maksim', 'maks@gmail.com', '123', '2024-11-01 16:06:27', 0),
-(3, 'John Doe', 'johndoe@example.com', '$2y$10$tGyG27y6uuTQYnStcWQ.X.1Xlif6kVmga./QzhkW71DqpxCHl3MCO', '2024-11-07 18:41:22', 0),
-(18, 'maksimj', 'maks@gmail.comj', '$2y$10$muHc6H/6Pl68r79LE3Hpbu9Zj3Z7BE7NaG/2LJQMUSVxZhJECLZNa', '2024-11-07 18:52:23', 0),
-(26, 'maksimkaaafdsfds', 'maks@gmail.comdsfds', '$2y$10$u3MTGhtudwJVO5Ny039xwO/0U3NHPE0.o4tOxZtB3YAtv.FvV.KQi', '2024-11-07 19:19:16', 0),
-(27, 'maksimkaaafdв', 'makskaa@gmail.comfd', '$2y$10$4Urmj7wio0iRo78G9lecMebz178Qe0p4hJi5EwogQEwjxZ0YBjPhe', '2024-11-07 19:19:43', 0),
-(28, 'maksimkaaafdsdf', 'makskaa@gmail.comfdsdsf', '$2y$10$0bx7A8q1y2jVfu5k.Ch6ROz9AxssPYKZDSRtYWlbdp9cLg4A22oL.', '2024-11-07 19:20:00', 0),
+(1, 'maksim', 'maks@gmail.com', '$2y$10$WFYQWLXPNJm3TNHF9RTL2OCe8WEe9ogz9px0kRkBH.OBmCCDrso2e\r\n', '2024-11-01 16:06:27', 0),
 (29, 'maksimka', 'maksimka@gmail.com', '$2y$10$0sCHHpbW1DOxcDimv8pDUOWnH9w2K4DF73wjiViPvscErsJrRqxPO', '2024-11-07 19:29:12', 0);
 
 --
@@ -112,13 +107,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `ads`
 --
 ALTER TABLE `ads`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
