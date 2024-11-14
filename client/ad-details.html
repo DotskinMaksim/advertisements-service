@@ -90,7 +90,6 @@
             </div>
             <p>{{ ad.description }}</p>
 
-            <!-- Условный рендеринг для отображения заголовка "Дополнительные изображения" только если они есть -->
             <div v-if="ad.additional_images.length > 0">
                 <h5>Дополнительные изображения:</h5>
                 <div v-for="(img, index) in ad.additional_images" :key="index">
