@@ -56,7 +56,9 @@ h4 {
 .card-body {
     padding: 15px;
 }
-
+footer{
+    text-align: center;
+}
 .card-title a:hover {
     text-decoration: underline; /* Подчеркивание при наведении */
 }

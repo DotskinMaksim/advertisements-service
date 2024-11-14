@@ -33,6 +33,13 @@
             font-size: 2rem;
             margin-top: 20px;
             color: #007bff;
+            display: inline-block;
+        }
+        .ad-container .price {
+            font-size: 1.6rem;
+            color: #28a745;
+            margin-left: 20px;
+            vertical-align: top;
         }
         .ad-container p {
             font-size: 1.1rem;
@@ -53,13 +60,7 @@
             transform: scale(1.05);
             transition: all 0.3s ease;
         }
-        footer {
-            text-align: center;
-            margin-top: 30px;
-            padding: 10px;
-            background-color: #343a40;
-            color: #fff;
-        }
+
         .back-btn {
             display: inline-block;
             margin-top: 20px;
@@ -84,10 +85,13 @@
         <div v-if="ad">
             <img :src="ad.main_image" class="img-fluid" alt="Main Ad Image">
 
-            <h4>{{ ad.title }}</h4>
+            <div class="d-flex align-items-center">
+                <h4>{{ ad.title }} - {{ ad.price }} ₽</h4>
+            </div>
             <p>{{ ad.description }}</p>
 
-            <div>
+            <!-- Условный рендеринг для отображения заголовка "Дополнительные изображения" только если они есть -->
+            <div v-if="ad.additional_images.length > 0">
                 <h5>Дополнительные изображения:</h5>
                 <div v-for="(img, index) in ad.additional_images" :key="index">
                     <img :src="img" class="img-thumbnail" :alt="'Additional Image ' + (index + 1)">
@@ -103,7 +107,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/vue@3.5.12/dist/vue.global.js"></script>
 <script>
-
 const app = Vue.createApp({
     data() {
         return {
@@ -115,7 +118,7 @@ const app = Vue.createApp({
         const id = params.get('id');
         const response = await fetch(`http://${apiHost}/ads/${id}`);
         const data = await response.json();
-        this.ad = data; 
+        this.ad = data;
     }
 }).mount('#app');
 </script>

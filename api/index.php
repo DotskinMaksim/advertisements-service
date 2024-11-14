@@ -76,6 +76,15 @@ switch ($request[0]) {
             echo json_encode(['message' => 'Method not allowed']);
         }
         break;
+    case 'upload-image':
+        if ($method === 'POST') {
+            $inputData = json_decode(file_get_contents('php://input'), true);
+            echo $adController->uploadAdImage($inputData);
+        } else {
+            http_response_code(405);
+            echo json_encode(['message' => 'Method not allowed']);
+        }
+        break;
     case 'users':
         switch ($method) {
             case 'GET':

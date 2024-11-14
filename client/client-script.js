@@ -4,7 +4,6 @@ function logOut() {
     sessionStorage.removeItem('authToken'); 
     sessionStorage.removeItem('userId'); 
 
-    window.location.href = '../';  
-
+    window.location.reload();
 }
 const apiHost = 'localhost:8000/api';

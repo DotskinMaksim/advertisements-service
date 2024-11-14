@@ -1,4 +1,7 @@
 <?php
+require_once __DIR__ . '/../../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
+$dotenv->load();
 
 
 class AdController {
@@ -126,6 +129,50 @@ class AdController {
     return json_encode(['message' => 'Ad created successfully', 'id' => $this->pdo->lastInsertId()]);
 }
 
+  public function uploadAdImage($data) {
+    if (!isset($_FILES['image'])) {
+        http_response_code(400);
+        return json_encode(['message' => 'No image file provided']);
+    }
+
+    $file = $_FILES['image'];
+
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        http_response_code(400);
+        return json_encode(['message' => 'File upload error']);
+    }
+
+    $apiKey =  $_ENV['IMGBB_API_KEY'];
+    $url = 'https://api.imgbb.com/1/upload?key=' . $apiKey;
+
+    $postData = [
+        'image' => base64_encode(file_get_contents($file['tmp_name'])), // Кодируем файл в base64
+    ];
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+        http_response_code(500);
+        return json_encode(['message' => 'Error while uploading image to imgBB: ' . curl_error($ch)]);
+    }
+
+    curl_close($ch);
+
+    $responseData = json_decode($response, true);
+    if ($responseData['success']) {
+        $imageUrl = $responseData['data']['url'];
+        return json_encode(['url' => $imageUrl]);
+    } else {
+        http_response_code(400);
+        return json_encode(['message' => 'Failed to upload image to imgBB', 'error' => $responseData['message']]);
+    }
+}
     public function deleteAd($adId) {
     $sqlCheck = "SELECT * FROM ads WHERE id = :id";
     $stmtCheck = $this->pdo->prepare($sqlCheck);
