@@ -6,4 +6,4 @@ function logOut() {
 
     window.location.reload();
 }
-const apiHost = 'localhost:8000/api';
+const apiHost = 'your_api_host';
