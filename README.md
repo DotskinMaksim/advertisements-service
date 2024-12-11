@@ -65,6 +65,7 @@
         networks:
           custom_network:
             ipv4_address: 172.18.0.2
+    
       mysql:
         image: dotskinmaksim/mysql:latest
         container_name: mysql-container
@@ -77,7 +78,7 @@
         networks:
           custom_network:
             ipv4_address: 172.18.0.4
-    
+      
       dns:
         image: dotskinmaksim/dns:latest
         container_name: dns-container
