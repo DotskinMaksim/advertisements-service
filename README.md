@@ -50,58 +50,59 @@
 
 1. Создайте файл `docker-compose.yml` в корне проекта со следующим содержимым:
 
-```yaml
-version: "3.8"
-
-services:
-  nginx:
-    image: dotskinmaksim/nginx:latest
-    container_name: nginx-container
-    ports:
-      - "80:8080"
-    restart: unless-stopped
-    dns:
-      - 172.18.0.3
+    ```yaml
+    version: "3.8"
+    
+    services:
+      nginx:
+        image: dotskinmaksim/nginx:latest
+        container_name: nginx-container
+        ports:
+          - "80:8080"
+        restart: unless-stopped
+        dns:
+          - 172.18.0.3
+        networks:
+          custom_network:
+            ipv4_address: 172.18.0.2
+        #working_dir: /var/www/advertisements-service
+        #command: php -S 0.0.0.0:8000
+      mysql:
+        image: dotskinmaksim/mysql:latest
+        container_name: mysql-container
+        ports:
+          - "3306:3306"
+        environment:
+          MYSQL_ROOT_PASSWORD: 123
+          MYSQL_DATABASE: ads_database
+        restart: unless-stopped
+        networks:
+          custom_network:
+            ipv4_address: 172.18.0.4
+    
+      dns:
+        image: dotskinmaksim/dns:latest
+        container_name: dns-container
+        ports:
+          - "5353:53/udp"
+          - "5353:53/tcp"
+        restart: unless-stopped
+        networks:
+          custom_network:
+            ipv4_address: 172.18.0.3
+    
     networks:
       custom_network:
-        ipv4_address: 172.18.0.2
-    #working_dir: /var/www/advertisements-service
-    #command: php -S 0.0.0.0:8000
-  mysql:
-    image: dotskinmaksim/mysql:latest
-    container_name: mysql-container
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: 123
-      MYSQL_DATABASE: ads_database
-    restart: unless-stopped
-    networks:
-      custom_network:
-        ipv4_address: 172.18.0.4
-
-  dns:
-    image: dotskinmaksim/dns:latest
-    container_name: dns-container
-    ports:
-      - "5353:53/udp"
-      - "5353:53/tcp"
-    restart: unless-stopped
-    networks:
-      custom_network:
-        ipv4_address: 172.18.0.3
-
-networks:
-  custom_network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.18.0.0/24
-
-```
+        driver: bridge
+        ipam:
+          config:
+            - subnet: 172.18.0.0/24
+    
+    ```
 2. Установите ip адрес своей виртуальной машины:
+   
     ```bash
-     172.16.13.1
+    172.16.13.1
     ```
 ---
 
