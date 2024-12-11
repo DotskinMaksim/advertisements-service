@@ -65,8 +65,6 @@
         networks:
           custom_network:
             ipv4_address: 172.18.0.2
-        #working_dir: /var/www/advertisements-service
-        #command: php -S 0.0.0.0:8000
       mysql:
         image: dotskinmaksim/mysql:latest
         container_name: mysql-container
