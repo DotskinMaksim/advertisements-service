@@ -56,7 +56,7 @@ version: "3.8"
 
 services:
   nginx:
-    image: dotskinmaksim/nginx-serv:latest
+    image: dotskinmaksim/nginx:latest
     container_name: nginx-container
     ports:
       - "80:8080"
