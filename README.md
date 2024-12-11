@@ -105,19 +105,15 @@ networks:
 
 ## Сборка и запуск контейнеров
 
-1. Соберите Docker-образ для `nginx`:
 
-    ```bash
-    docker build -t nginx3-img .
-    ```
 
-2. Запустите контейнеры с помощью Docker Compose:
+1. Запустите контейнеры с помощью Docker Compose:
 
     ```bash
     docker compose up -d
     ```
 
-3. Проверьте работающие контейнеры:
+2. Проверьте работающие контейнеры:
 
     ```bash
     docker ps
