@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  nginx:
+    image: ghcr.io/DotskinMaksim/advertisements-service-nginx:1.0
+    container_name: nginx-container
+    ports:
+      - "80:8080"
+    restart: unless-stopped
+    dns:
+      - 172.18.0.3
+    networks:
+      custom_network:
+        ipv4_address: 172.18.0.2
+
+  mysql:
+    image: ghcr.io/DotskinMaksim/advertisements-service-mysql:1.0
+    container_name: mysql-container
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: ads_database
+    restart: unless-stopped
+    networks:
+      custom_network:
+        ipv4_address: 172.18.0.4
+
+  dns:
+    image: ghcr.io/DotskinMaksim/advertisements-service-dns:1.0
+    container_name: dns-container
+    ports:
+      - "5353:53/udp"
+      - "5353:53/tcp"
+    restart: unless-stopped
+    networks:
+      custom_network:
+        ipv4_address: 172.18.0.3
+
+networks:
+  custom_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24
+
+
