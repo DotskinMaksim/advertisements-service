@@ -1,44 +1,44 @@
-# Запуск контейнеров для проекта
+# Running Containers for the Project
 
-Этот документ предоставляет пошаговую инструкцию по установке Docker, Docker Compose, запуску контейнеров и настройке проекта.
+This document provides a step-by-step guide on how to install Docker, Docker Compose, run containers, and configure the project.
 
 ---
 
-## Установка Docker
+## Installing Docker
 
-1. Скачайте и выполните скрипт для установки Docker:
+1. Download and execute the script to install Docker:
 
     ```bash
     curl -fsSL https://get.docker.com -o get-docker.sh
     sudo sh get-docker.sh
     ```
 
-2. Проверьте, что Docker установлен корректно:
+2. Verify that Docker is installed correctly:
 
     ```bash
     docker --version
     ```
 
-3. Добавьте текущего пользователя в группу Docker для выполнения команд без `sudo`:
+3. Add the current user to the Docker group to run commands without `sudo`:
 
     ```bash
     sudo usermod -aG docker $USER
     ```
 
-    После этого выйдите из системы и войдите снова.
+    After this, log out and log back in.
 
 ---
 
-## Установка Docker Compose
+## Installing Docker Compose
 
-1. Установите плагин Docker Compose:
+1. Install the Docker Compose plugin:
 
     ```bash
     sudo apt-get update
     sudo apt-get install docker-compose-plugin
     ```
 
-2. Проверьте установку Docker Compose:
+2. Verify Docker Compose installation:
 
     ```bash
     docker compose version
@@ -46,9 +46,9 @@
 
 ---
 
-## Конфигурация проекта
+## Project Configuration
 
-1. Создайте файл `docker-compose.yml` в корне проекта со следующим содержимым:
+1. Create a `docker-compose.yml` file in the project root with the following content:
 
     ```yaml
     version: "3.8"
@@ -96,44 +96,47 @@
         ipam:
           config:
             - subnet: 172.18.0.0/24
-    
     ```
-2. Установите ip адрес своей виртуальной машины:
-   
+
+2. Set the IP address of your virtual machine:
+
     ```bash
     172.16.13.1
     ```
+
 ---
 
-## Сборка и запуск контейнеров
+## Building and Running Containers
 
-
-
-1. Запустите контейнеры с помощью Docker Compose:
+1. Start the containers using Docker Compose:
 
     ```bash
     docker compose up -d
     ```
 
-2. Проверьте работающие контейнеры:
+2. Check running containers:
 
     ```bash
     docker ps
     ```
-3. Поставьте как DNS сервер:
+
+3. Set the DNS server:
 
     ```bash
-     172.18.0.3
+    172.18.0.3
     ```
-4. Сайт будет доступен по адресу:
-   ```bash
-     ls2.myads.loc
+
+4. The website will be available at:
+
+    ```bash
+    ls2.myads.loc
     ```
+
 ---
 
-## Остановка контейнеров
+## Stopping Containers
 
-Для остановки контейнеров выполните:
+To stop the containers, run:
 
 ```bash
 docker compose down
@@ -141,10 +144,10 @@ docker compose down
 
 ---
 
-## Устранение ошибок
+## Troubleshooting
 
-1. Если вы видите ошибку сети, убедитесь, что ваша сеть корректно настроена в секции `networks` файла `docker-compose.yml`.
-2. Проверьте логи контейнеров для диагностики:
+1.	If you encounter a network error, ensure your network is correctly configured in the networks section of the docker-compose.yml file.
+2.	Check container logs for diagnostics:
 
     ```bash
     docker logs <container_name>
@@ -152,5 +155,4 @@ docker compose down
 
 ---
 
-Теперь ваш проект готов к запуску в Docker. Удачной работы!
-
+Now your project is ready to run on Docker. Happy coding!
